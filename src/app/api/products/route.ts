@@ -48,7 +48,9 @@ export async function POST( request: NextRequest) {
         const category = formdata.get("category") as string || null;
        const inventory = formdata.get("inventory") as string || null;
 
-       if (!name || !description || !price || !category || !inventory) {
+
+
+       if (!name || !description || !price || !category) {
         return NextResponse.json({
             message: "Error all fields are required!"
         } , {status: 404})
@@ -65,6 +67,7 @@ export async function POST( request: NextRequest) {
         category,
         inventory
        })
+
      await newProduct.save()
 
      

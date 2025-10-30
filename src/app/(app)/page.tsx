@@ -1,13 +1,12 @@
-
-import React, { useState } from 'react'
-import Link from 'next/link'
 import ProductList from './components/ProductList'
-// Needs SSG (data must fetched on build time)
+// Needs SSG (data must fetched on build time) 
 // static site generation
 // with data 
 
 async function HomePage() {
-const res = await fetch('/api/products' , {
+
+
+const res = await fetch(`${process.env.BASE_URL}/api/products` , {
   cache: 'force-cache'
 })
 const data = await res.json()

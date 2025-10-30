@@ -1,39 +1,38 @@
-"use client"
 
 
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+async function page() {
 
-// SSR needed
+const res = await fetch(`${process.env.BASE_URL}/api/products` , {
+  cache: "no-store"
+})
 
+const data = await res.json()
+const products = data.FoundProducts || []
+const totalProducts = products.length;
 
-function page() {
+const LowStock = products.filter((p: any) =>  p.inventory < 5).length;
 
-const [products , setproducts] = useState([])
-
-useEffect(() => {
- const fetchProducts = async() => {      
-try {
-   const response = await axios.get('/api/products')
-
-   if (products.length === 0) {
-    console.log("No products uploaded yett")
-   }
-   console.log(response.data)
-   setproducts(response.data.products)
-
-} catch (error) {
-    console.log("Error while  Fetching  the produts" , error)
-}
-    }
-fetchProducts()
-} , [])
 
 
   return (
-<div>
-    dashboard
-</div>
+   <main className="p-10">
+      <h1 className="text-3xl font-bold mb-6">Inventory Dashboard</h1>
+
+      <div className="mb-6">
+        <p className="text-lg">🛒 Total Products: {totalProducts}</p>
+        <p className="text-lg text-red-500">⚠️ Low Stock: {LowStock}</p>
+      </div>
+
+      <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {products.map((p: any) => (
+          <li key={p._id} className="border p-4 rounded-lg shadow">
+            <h2 className="font-semibold">{p.name}</h2>
+            <p>Stock: {p.inventory}</p>
+            <p>Price: ${p.price}</p>
+          </li>
+        ))}
+      </ul>
+    </main>
   )
 }
 

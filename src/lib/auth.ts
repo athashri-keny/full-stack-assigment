@@ -11,7 +11,5 @@ if (adminKey !== process.env.ADMIN_KEY) {
         }
     )
 }
-return new Response(
-    "Sucess"
-)
+return null;
 }
