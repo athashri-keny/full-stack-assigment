@@ -12,7 +12,8 @@ async function HomePage() {
   await dbConnect();
   const products = await ProductsModel.find({}).lean();
 
-
+  const plainProducts = JSON.parse(JSON.stringify(products));
+  
   return (
    <main className="min-h-screen bg-gray-50 px-6 py-10">
       {/* Header */}
@@ -48,7 +49,7 @@ async function HomePage() {
         {products.length === 0 ? (
           <p className="text-gray-500 text-center mt-20">No products available yet.</p>
         ) : (
-          <ProductList products={products} />
+          <ProductList products={plainProducts} />
         )}
       </section>
 

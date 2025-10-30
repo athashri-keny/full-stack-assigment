@@ -6,11 +6,13 @@ import { notFound } from 'next/navigation';
 // get a single product slug and return them  
 export const revalidate = 60;
 
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProductDetailPage(props: { params: Promise<{ slug: string }> }) {
 
    await dbConnect();
-  const product = await ProductsModel.findOne({ slug: params.slug }).lean();
 
+   const {slug} = await props.params
+  const product = await ProductsModel.findOne({slug}).lean();
+  console.log(product)
   if (!product) notFound();
 
 
