@@ -1,15 +1,14 @@
 
+import dbConnect from '@/lib/dbconnect';
 import WishlistButton from '../components/wishlist-button'
+import ProductsModel from '@/model/products';
 
 
  async function page() {
     
-const res = await fetch(`${process.env.BASE_URL}/api/products` , {
-  cache: "no-cache"
-})
+  await dbConnect();
+  const products = await ProductsModel.find().limit(5).lean();
 
-const data = await res.json()
-const products = data.FoundProducts.slice(0 , 5)
 
   return (
      <main className="min-h-screen bg-gray-50 px-6 py-10 space-y-8">
