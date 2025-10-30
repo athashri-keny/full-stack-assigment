@@ -3,9 +3,12 @@ import Link from "next/link";
 
 async function page() {
 
-const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
+  const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+const res = await fetch(`${baseUrl}/api/products`, {
   cache: "no-store",
-});
+}); 
 
 const data = await res.json()
 const products = data.FoundProducts || []
