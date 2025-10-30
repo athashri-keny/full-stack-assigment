@@ -1,23 +1,18 @@
+import dbConnect from '@/lib/dbconnect';
+import ProductsModel from '@/model/products';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 // ISR
-// get a single product slug and return them 
+// get a single product slug and return them  
 export const revalidate = 60;
 
-export default async function ProductDetailPage(props: {params: Promise<{slug: string}>} ) {
-  
-const {slug} = await props.params
-const res = await fetch(`${process.env.BASE_URL}/api/products/by-slug/${slug}`  , {
-  next: {revalidate: 60}
-})
+export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
 
-if(!res.ok) {
-  notFound()
-}
+   await dbConnect();
+  const product = await ProductsModel.findOne({ slug: params.slug }).lean();
 
-const data = await res.json()
-const product = data.foundSLug
-console.log("Found Products = " , product)
+  if (!product) notFound();
+
 
 
   return (
@@ -59,17 +54,11 @@ console.log("Found Products = " , product)
 
 // get all slugs and prebuild them in build time so render fast
 export async function generateStaticParams() {
-  
-  const res = await fetch(`${process.env.BASE_URL}/api/products` , {
-    cache: "force-cache"
-  })
+  await dbConnect()
+ 
+  const docs = await ProductsModel.find({} , "slug").lean()
 
-  const data = await res.json()
-  console.log(data)
-
-  return data.FoundProducts.map((p: any) => ({
-    slug: p.slug
-  }))
+  return docs.map((d: any) => ({ slug: d.slug }));
 
 
 }

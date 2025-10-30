@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import ProductList from './components/ProductList'
+import dbConnect from '@/lib/dbconnect';
+import ProductsModel from '@/model/products';
 
 // Needs SSG (data must fetched on build time) 
 // static site generation
@@ -7,13 +9,8 @@ import ProductList from './components/ProductList'
 
 async function HomePage() {
 
-
-const res = await fetch(`${process.env.BASE_URL}/api/products` , {
-  next: {revalidate: 60}
-})
-const data = await res.json()
-const products = data.FoundProducts   
-
+  await dbConnect();
+  const products = await ProductsModel.find({}).lean();
 
 
   return (
