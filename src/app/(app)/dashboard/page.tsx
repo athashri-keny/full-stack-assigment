@@ -3,7 +3,7 @@ import Link from "next/link";
 
 async function page() {
 
-const res = await fetch(`${process.env.VERCEL_ENV ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'}/api/products`, {
+const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`, {
   cache: "no-store",
 });
 
