@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { any, z } from "zod";
+import Link from "next/link";
 
 // ✅ Product Schema
 export const ProductCreate = z.object({
@@ -118,129 +119,132 @@ formdata.append("inventory" , values.inventory.toString())
 
 
   return (
-    <main className="p-6 space-y-8">
-      <h1 className="text-2xl font-semibold">Admin Panel</h1>
+<main className="min-h-screen bg-gray-50 px-6 py-10">
+      {/* Header */}
+      <header className="flex items-center justify-between mb-10">
+        <h1 className="text-3xl font-bold text-gray-800">🛠️ Admin Panel</h1>
+        <Link
+          href="/"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          ← Back to Home
+        </Link>
+      </header>
 
       {/* Admin Key */}
-      <section className="space-y-2">
-        <label className="text-sm">Admin Key</label>
-
+      <section className="bg-white p-6 rounded-lg shadow-sm border mb-10 max-w-xl">
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">Admin Access</h2>
+        <label className="block text-sm text-gray-600 mb-1">Admin Key</label>
         <input
-          className="border p-2 rounded w-full max-w-md"
+          className="border p-2 rounded w-full text-black"
           value={adminKey}
           onChange={(e) => {
             setAdminKey(e.target.value);
             localStorage.setItem("adminKey", e.target.value);
           }}
-          placeholder="Paste ADMIN_KEY"
+          placeholder="Enter ADMIN_KEY"
         />
-
       </section>
 
       {/* Create Product */}
-      <section>
-        <h2 className="font-medium mb-2">Create product</h2>
-        <form onSubmit={handleSubmit(onCreate)} className="grid gap-3 max-w-xl">
+      <section className="bg-white p-6 rounded-lg shadow-sm border mb-10 max-w-xl">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Create Product</h2>
 
-          <input className="border p-2" placeholder="Name" {...register("name")} />
-
+        <form onSubmit={handleSubmit(onCreate)} className="grid gap-3">
+          <input className="border p-2 rounded text-black" placeholder="Name" {...register("name")} />
           {errors.name && <p className="text-red-600 text-sm">{errors.name.message}</p>}
 
           <input
-            className="border p-2"
+            className="border p-2 rounded text-black"
             type="number"
             placeholder="Price"
             {...register("price", { valueAsNumber: true })}
           />
-
           {errors.price && <p className="text-red-600 text-sm">{errors.price.message}</p>}
 
-          <input className="border p-2" placeholder="Category" {...register("category")}  
-          
+          <input
+            className="border p-2 rounded text-black"
+            placeholder="Category"
+            {...register("category")}
           />
 
-          <textarea className="border p-2" placeholder="Description" {...register("description")} />
-          {errors.description && <p className="text-red-600 text-sm">{errors.description.message}</p>}
+          <textarea
+            className="border p-2 rounded text-black"
+            placeholder="Description"
+            {...register("description")}
+          />
+          {errors.description && (
+            <p className="text-red-600 text-sm">{errors.description.message}</p>
+          )}
 
-         <input className="border p-2" placeholder="inventory" {...register("inventory" , {valueAsNumber: true})} 
-  
-         /> 
+          <input
+            className="border p-2 rounded text-black"
+            type="number"
+            placeholder="Inventory"
+            {...register("inventory", { valueAsNumber: true })}
+          />
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
+            className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           >
-            {isSubmitting ? "Saving..." : "Create"}
+            {isSubmitting ? "Saving..." : "Create Product"}
           </button>
         </form>
       </section>
 
       {/* Product List */}
       <section>
-        <h2 className="font-medium mb-2">Products</h2>
-        <ul className="space-y-3">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Products</h2>
 
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((p: any) => (
-            <li key={p._id} className="border rounded p-3">
-              <div className="flex items-center justify-between">
+            <li
+              key={p._id}
+              className="border bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition"
+            >
+              <div className="flex items-center justify-between mb-2">
                 <div>
-                  <p className="font-semibold">{p.name}</p>
-                  <p className="text-sm text-gray-600">
-                    ₹{p.price} · {p.slug}
-                  </p>
+                  <p className="font-semibold text-gray-800">{p.name}</p>
+                  <p className="text-sm text-gray-600">₹{p.price}</p>
                 </div>
-                <button className="text-blue-600" onClick={() => openEdit(p)}>
+                <button
+                  className="text-blue-600 hover:underline"
+                  onClick={() => openEdit(p)}
+                >
                   Edit
                 </button>
               </div>
 
               {editing?._id === p._id && (
                 <form onSubmit={handleEdit(onUpdate)} className="mt-3 grid gap-2">
+                  <input className="border p-2 rounded text-black" {...editReg("name")} />
 
                   <input
-                   className="border p-2" 
-                   {...editReg("name")} 
-                   />
-                  {editErr.name && <p className="text-red-600 text-sm">{editErr.name.message}</p>}
-
-                  <input
-                    className="border p-2"
+                    className="border p-2 rounded text-black"
                     type="number"
                     {...editReg("price", { valueAsNumber: true })}
                   />
-
                   <input
-                    className="border p-2"
+                    className="border p-2 rounded text-black"
                     type="number"
                     {...editReg("inventory", { valueAsNumber: true })}
                   />
+                  <input className="border p-2 rounded text-black" {...editReg("category")} />
+                  <input className="border p-2 rounded text-black" {...editReg("description")} />
 
-                  <input
-                    className="border p-2"
-                    {...editReg("description",)}
-                  />
-
-<input
-                    className="border p-2"
-                    {...editReg("category",)}
-                  />
-
-
-
-                  {editErr.price && <p className="text-red-600 text-sm">{editErr.price.message}</p>}
-
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-2">
                     <button
                       disabled={editSubmitting}
-                      className="px-3 py-1 bg-green-600 text-white rounded"
+                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
                     >
                       {editSubmitting ? "Saving..." : "Save"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditing(null)}
-                      className="px-3 py-1 bg-red-200 rounded text-black"
+                      className="px-3 py-1 bg-red-700 rounded hover:bg-red-900"
                     >
                       Cancel
                     </button>
@@ -251,6 +255,11 @@ formdata.append("inventory" , values.inventory.toString())
           ))}
         </ul>
       </section>
+
+      {/* Footer */}
+      <footer className="mt-16 text-center text-sm text-gray-500">
+        <p>© {new Date().getFullYear()} Admin Panel – Product Management</p>
+      </footer>
     </main>
   );
 }
