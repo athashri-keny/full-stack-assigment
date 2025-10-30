@@ -1,20 +1,24 @@
 import Link from "next/link";
-
+import dbConnect from "@/lib/dbconnect";
+import ProductsModel from "@/model/products";
 
 async function page() {
 
-  const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+await dbConnect()
 
-const res = await fetch(`${baseUrl}/api/products`, {
-  cache: "no-store",
-}); 
+const docs = await ProductsModel.find().sort({createdAt: -1}).lean()
 
-const data = await res.json()
-const products = data.FoundProducts || []
-const totalProducts = products.length;
-
-
+const products = docs.map((d: any) => ({
+    _id: String(d._id),
+    name: d.name,
+    slug: d.slug,
+    description: d.description,
+    price: Number(d.price),
+    category: d.category ?? "",
+    inventory: Number(d.inventory ?? 0),
+}))
+ 
+const totalProducts = products.length
 
 
 
