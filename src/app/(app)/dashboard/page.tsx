@@ -3,9 +3,9 @@ import Link from "next/link";
 
 async function page() {
 
-const res = await fetch(`${process.env.BASE_URL}/api/products` , {
-  cache: "no-store"
-})
+const res = await fetch(`${process.env.VERCEL_ENV ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'}/api/products`, {
+  cache: "no-store",
+});
 
 const data = await res.json()
 const products = data.FoundProducts || []
