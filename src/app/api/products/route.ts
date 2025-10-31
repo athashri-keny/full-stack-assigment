@@ -31,57 +31,53 @@ export async function GET(_request: NextRequest) {
 
 // add a new Product
 
-export async function POST( request: NextRequest) {
-    try {
 
-        const authError = Checkadmin(request)
-        if(authError) return authError;
+export async function POST(request: NextRequest) {
+  try {
 
+    const authError = Checkadmin(request);
+    if (authError) return authError;
 
-        await dbConnect()
+    await dbConnect();
 
-        const formdata = await request.formData()
+    const body = await request.json();
 
-        const name = formdata.get("name") as string || null
-        const description = formdata.get("description") as string || null
-        const price = formdata.get("price") as string || null;
-        const category = formdata.get("category") as string || null;
-       const inventory = formdata.get("inventory") as string || null;
+    const { name, description, price, category, inventory } = body;
 
 
-
-       if (!name || !description || !price || !category) {
-        return NextResponse.json({
-            message: "Error all fields are required!"
-        } , {status: 404})
-       }
-
-
-  const slug = name?.toLowerCase().replace(/\s+/g, "-");
-  
-       const newProduct = new ProductsModel({
-        name,
-        slug,
-        description,
-        price,
-        category,
-        inventory
-       })
-
-     await newProduct.save()
-
-     
-     return NextResponse.json({
-        message: "Sucuessfully added new product",
-        newProduct
-     } , {status: 200})
-        
-
-
-    } catch (error) {
-        console.log("Error while adding a new Product"  , error)  
-        return NextResponse.json({
-            message: "Error while adding a new Project"
-        } , {status: 500})
+    if (!name || !description || !price || !category || inventory === undefined) {
+      return NextResponse.json(
+        { message: "All fields are required!" },
+        { status: 400 }
+      );
     }
+
+
+    const slug = name.toLowerCase().replace(/\s+/g, "-");
+
+    const newProduct = new ProductsModel({
+      name,
+      slug,
+      description,
+      price,
+      category,
+      inventory,
+    });
+
+    await newProduct.save();
+
+    return NextResponse.json(
+      {
+        message: "✅ Successfully added new product",
+        newProduct,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error while adding a new Product:", error);
+    return NextResponse.json(
+      { message: "Error while adding a new product" },
+      { status: 500 }
+    );
+  }
 }

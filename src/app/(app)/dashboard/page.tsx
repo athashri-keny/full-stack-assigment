@@ -2,6 +2,8 @@ import Link from "next/link";
 import dbConnect from "@/lib/dbconnect";
 import ProductsModel from "@/model/products";
 
+
+export const dynamic = 'force-dynamic'; // force render on every request
 async function page() {
 
 await dbConnect()

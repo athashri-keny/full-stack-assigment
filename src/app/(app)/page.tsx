@@ -7,13 +7,25 @@ import ProductsModel from '@/model/products';
 // static site generation
 // with data 
 
+
 async function HomePage() {
 
-  await dbConnect();
-  const products = await ProductsModel.find({}).lean();
+ await dbConnect();
 
-  const plainProducts = JSON.parse(JSON.stringify(products));
+  const docs = await ProductsModel.find({});
+
+ const products = docs.map((d: any) => ({
+    _id: String(d._id),
+    name: d.name,
+    slug: d.slug,
+    description: d.description,
+    price: Number(d.price),
+    category: d.category ?? "",
+    inventory: Number(d.inventory ?? 0),
+  }));
+
   
+
   return (
    <main className="min-h-screen bg-gray-50 px-6 py-10">
       {/* Header */}
@@ -49,7 +61,7 @@ async function HomePage() {
         {products.length === 0 ? (
           <p className="text-gray-500 text-center mt-20">No products available yet.</p>
         ) : (
-          <ProductList products={plainProducts} />
+          <ProductList products={products} />
         )}
       </section>
 

@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { any, z } from "zod";
 import Link from "next/link";
 
-// ✅ Product Schema
 export const ProductCreate = z.object({
   name: z.string().min(1, "Name is required"),
   price: z.number().min(1, "Price must be greater than 0"), // coerce fixes the number issue
@@ -35,7 +34,7 @@ function AdminPage() {
     setProducts(data.FoundProducts || []);
   }
 
-  // ✅ Create Form
+ 
   const {
     register,
     handleSubmit,
@@ -56,14 +55,8 @@ function AdminPage() {
   async function onCreate(values: Product) {
     console.log("Creating product", values);
 
-    
-const formdata = new FormData()
 
-formdata.append("name" , values.name);
-formdata.append("price" , values.price.toString())
-formdata.append("description" , values.description)
-formdata.append("category" , values.category)
-formdata.append("inventory" , values.inventory.toString())
+
 
 
     const res = await fetch("/api/products", {
@@ -71,7 +64,7 @@ formdata.append("inventory" , values.inventory.toString())
       headers: {
         "x-admin-key": adminKey,
       },
-      body: formdata,
+      body: JSON.stringify(values),
     });
 
 
