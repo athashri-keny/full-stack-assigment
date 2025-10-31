@@ -54,3 +54,7 @@
 ## Admin Access
 
 Use the admin key set in `.env.local` to access protected routes.
+
+## instructions to run this project
+- npm install
+- npm run dev
