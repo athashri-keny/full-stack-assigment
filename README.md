@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+**Name:** Athashri Keny  
+**Date:** October 31, 2025  
+**Assignment:** Next.js Rendering Strategies Assigment
 
-First, run the development server:
+## 🔗 Links
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Live Deployment:** https://full-stack-assigment.vercel.app/
+- **GitHub Repository:** https://github.com/athashri-keny/full-stack-assigment
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Overview
+- **SSG** (Static Site Generation) - Home Page
+- **ISR** (Incremental Static Regeneration) - Product Detail Pages
+- **SSR** (Server-Side Rendering) - Inventory Dashboard
+- **CSR** (Client-Side Rendering) - Admin Panel
+  
+## 🎯 In detail
+- ### 1. Home Page (`/`) - SSG (Static Site Generation)
+- **Why:** Product catalog doesn't change frequently, SSG provides best performance
+- **Implementation:** Data fetched at build time, no revalidation
+- **Benefits:** Fast loading, SEO-friendly, cached CDN delivery
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+  ### 2. Product Detail (`/products/[slug]`) - ISR (Incremental Static Regeneration)
+- **Why:** Product details (price, inventory) need periodic updates
+- **Implementation:** `revalidate: 60` - updates every 60 seconds
+- **Benefits:** Balance between static performance and fresh data
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+  ### 3. Dashboard (`/dashboard`) - SSR (Server-Side Rendering)
+- **Why:** Admin needs real-time inventory statistics
+- **Implementation:** `export const dynamic = 'force-dynamic'`
+- **Benefits:** Always fresh data, secure for admin operations
 
-## Learn More
+### 4. Admin Panel (`/admin`) - CSR (Client-Side Rendering)
+- **Why:** Interactive CRUD operations require client-side state management
+- **Implementation:** `"use client"` with useEffect and fetch
+- **Benefits:** Dynamic forms, instant feedback, API integration
 
-To learn more about Next.js, take a look at the following resources:
+## API Routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `GET /api/products` - Fetch all products
+- `GET /api/products/[slug]` - Fetch single product
+- `POST /api/products` - Create product (protected)
+- `PUT /api/products/[id]` - Update product (protected)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Technologies Used
 
-## Deploy on Vercel
+- Next.js 14/15 (App Router)
+- TypeScript
+- MongoDB + Mongoose
+- React Hook Form + Zod
+- Tailwind CSS
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Admin Access
+
+Use the admin key set in `.env.local` to access protected routes.
